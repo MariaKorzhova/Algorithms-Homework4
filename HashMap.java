@@ -1,5 +1,3 @@
-package ru.geekbrains.lesson4;
-
 import java.util.Iterator;
 
 public class HashMap<K, V> implements Iterable<HashMap.Entity> {
@@ -18,16 +16,39 @@ public class HashMap<K, V> implements Iterable<HashMap.Entity> {
 
     class HashMapIterator implements Iterator<HashMap.Entity>{
 
+        int bucketIndex = 0;
+        int nodeIndex = 0;
+        Entity entity;
+        
         @Override
         public boolean hasNext() {
-            //TODO: Подумать головой, ведь это домашнее задание
+            for (int i = bucketIndex; i < buckets.length; i ++) {                
+                Bucket<K, V> bucket = buckets[i];
+                if (bucket != null) {
+                    Bucket.Node node = bucket.head;                    
+                    int j = 0;                   
+                    while (node != null) {                        
+                        if (j < nodeIndex) {
+                            j ++;
+                            node = node.next;
+                            continue;
+                        }                        
+                        entity = new Entity();
+                        entity.key = (K)node.value.key;
+                        entity.value = (V)node.value.value;
+                        nodeIndex ++;
+                        return true;
+                    }                    
+                    nodeIndex = 0;
+                }                          
+                bucketIndex ++;
+            }           
             return false;
         }
 
         @Override
         public Entity next() {
-            //TODO: Подумать головой, ведь это домашнее задание
-            return null;
+            return entity;
         }
     }
 
