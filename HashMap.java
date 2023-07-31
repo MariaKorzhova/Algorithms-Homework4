@@ -16,32 +16,32 @@ public class HashMap<K, V> implements Iterable<HashMap.Entity> {
 
     class HashMapIterator implements Iterator<HashMap.Entity>{
 
-        int bucketIndex = 0;
-        int nodeIndex = 0;
+        int nodeI = 0;
+        int bucketI = 0;
         Entity entity;
         
         @Override
         public boolean hasNext() {
-            for (int i = bucketIndex; i < buckets.length; i ++) {                
+            for (int i = bucketI; i < buckets.length; i = i+1) {                
                 Bucket<K, V> bucket = buckets[i];
                 if (bucket != null) {
                     Bucket.Node node = bucket.head;                    
                     int j = 0;                   
                     while (node != null) {                        
-                        if (j < nodeIndex) {
-                            j ++;
+                        if (j < nodeI) {
+                            j = j+1;
                             node = node.next;
                             continue;
                         }                        
                         entity = new Entity();
                         entity.key = (K)node.value.key;
                         entity.value = (V)node.value.value;
-                        nodeIndex ++;
+                        nodeI = nodeI+1;
                         return true;
                     }                    
-                    nodeIndex = 0;
+                    nodeI = 0;
                 }                          
-                bucketIndex ++;
+                bucketI = bucketI+1;
             }           
             return false;
         }
